@@ -1,0 +1,43 @@
+apa fungsi '/crawl.php'
+Berfungsi sebagai Mesin Pencari Web / Crawler Bot (Web Scraper).
+Berikut adalah rincian fungsi utamanya:
+1. Antarmuka Input (Frontend): Menampilkan sebuah formulir (form) sederhana dengan kolom input URL dan tombol "Crawl". Di sini Anda (atau admin) dapat memasukkan alamat website apa pun yang ingin diindeks.
+2. Ekstraksi Data (Scraping): Ketika sebuah URL dikirim, skrip ini akan mengunduh halaman tersebut dan menggunakan class DomDocumentParser untuk membedah struktur HTML-nya.
+3. Mengumpulkan Halaman (Sites): Ia mencari tag <title>, <meta name="description">, dan <meta name="keywords"> untuk mengekstrak informasi halaman tersebut, lalu menyimpannya ke dalam tabel cari_sites.
+4. Mengumpulkan Gambar (Images): Ia mencari semua tag <img>, mengekstrak atribut src, alt, dan title, lalu mengubahnya menjadi URL absolut (lengkap) sebelum menyimpannya ke tabel cari_images.
+5. Penelusuran Rekursif (Follow Links): Ia juga mencari semua tautan (tag <a>) di dalam halaman tersebut, menambahkannya ke dalam antrean (array $crawling), lalu secara otomatis mengunjungi dan mengindeks tautan-tautan baru tersebut satu per satu (rekursif) hingga batas tertentu.
+Singkatnya, crawl.php adalah "robot" pengumpul data milik Doogle. Ia bekerja seperti Googlebot yang berkunjung dari satu halaman ke halaman lain untuk membangun bank data (cari_sites dan cari_images) agar nantinya bisa dicari oleh pengguna melalui antarmuka pencarian utama (index.php atau search.php).
+
+------
+Contoh skenario penggunaan crawl.php dalam kehidupan nyata untuk memperkaya data aplikasi Doogle Anda:
+Tujuan: Anda ingin mesin pencari Doogle Anda bisa menampilkan hasil pencarian tentang "Berita Teknologi".
+Langkah-langkah Skenario:
+1. Akses Halaman Crawler Sebagai pengelola aplikasi, Anda membuka browser dan mengakses URL crawler Anda, misalnya: http://192.168.1.4/doogle/crawl.php (atau URL domain lokal Anda).
+2. Memasukkan Target URL Di halaman tersebut, akan muncul sebuah kotak input sederhana. Anda memasukkan alamat website teknologi yang ingin Anda indeks. Misalnya: https://tekno.kompas.com/. Lalu Anda menekan tombol "Crawl".
+3. Proses di Balik Layar (Otomatis)
+* Halaman Pertama: crawl.php akan mengunduh halaman beranda tekno.kompas.com. Skrip akan membaca judul halaman, deskripsi web, dan menyimpan setiap gambar artikel ke dalam tabel cari_images serta informasi halaman tersebut ke cari_sites.
+* Melompat ke Halaman Lain (Rekursif): Selain membaca konten, crawl.php mendeteksi bahwa di beranda tersebut ada tautan ke artikel lain (misal: tautan ke artikel "Rilis Smartphone Terbaru" dan "Review Laptop Asis"). Bot akan secara otomatis mengklik (mengakses) tautan tersebut di memori sistem dan mengindeks isi kedua artikel tersebut juga.
+* Hal ini akan terus berlanjut seperti jaring laba-laba, meloncat dari satu tautan ke tautan lain di dalam tekno.kompas.com.
+4. Hasil Bagi Pengguna Akhir Satu jam kemudian, ada pengunjung yang membuka halaman utama Doogle (index.php) dan mengetikkan kata kunci pencarian: "Smartphone Terbaru".
+Karena bot crawl.php sebelumnya sudah membaca, mengekstrak, dan menyimpan data dari situs berita tadi, Doogle dengan sangat cepat akan menampilkan daftar artikel web serta gambar-gambar ponsel baru tersebut di halaman hasil pencarian Doogle (beserta tautan yang langsung mengarah ke situs tekno.kompas.com).
+Catatan Tambahan: Karena bot ini menelusuri secara rekursif (berpindah ke halaman lain tiada henti), biasanya loading halaman crawl.php tidak akan pernah berhenti berputar sampai proses dibatalkan paksa atau sistem PHP menghentikannya (karena mencapai timeout/memory limit). Itulah mengapa crawler mesin pencari besar seperti Google bot berjalan senyap di background server, bukan diakses langsung melalui browser yang interaktif.
+
+
+reset_db
+php /var/www/gkr_myid/public/doogle/reset_db.php
+
+
+admin.php
+watcher 'judul'
+sort berdasarkan 'Judul'
+sembunyikan kolom 'URL' dari tampilan
+Tab 'Gambar', Modal Box 'Ubah Gambar' tampilkan thumbnail di sebelah kanan
+
+admin.php
+hapus frasa 'File Gambar / Foto:'
+lewati Scraper 'Katalog / Direktori xxxx'
+
+crawl.php
+tombol 'Stop' menhentikan (crawling/scrapper) yang sedang berjalan
+
+admin.php
